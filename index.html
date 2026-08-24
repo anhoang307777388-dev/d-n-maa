@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MediCare AI — Nền tảng quản lý hồ sơ sức khỏe gia đình</title>
+<meta name="description" content="MediCare AI: chăm sóc chủ động, phát hiện sớm, bảo vệ cả gia đình bằng AI.">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap');
+
+  :root{
+    --primary:#0F5C57;
+    --primary-dark:#0A403D;
+    --primary-soft:#E4F0EC;
+    --bg:#F5F7F5;
+    --card:#FFFFFF;
+    --accent:#D9A441;
+    --text:#16302C;
+    --muted:#6E7F7C;
+    --border:#E1E8E6;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+    color:var(--text);
+    background:var(--bg);
+    line-height:1.55;
+  }
+  .display{font-family:'Fraunces',serif;}
+  a{color:inherit;}
+  img,svg{display:block;}
+  .wrap{max-width:1120px;margin:0 auto;padding:0 24px;}
+
+  /* Nav */
+  header.nav{
+    position:sticky;top:0;z-index:50;
+    background:rgba(245,247,245,0.9);
+    backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--border);
+  }
+  .nav-inner{
+    max-width:1120px;margin:0 auto;padding:14px 24px;
+    display:flex;align-items:center;justify-content:space-between;
+  }
+  .brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:16px;}
+  .brand .mark{
+    width:32px;height:32px;border-radius:9px;background:var(--primary);
+    display:flex;align-items:center;justify-content:center;color:#fff;font-size:16px;
+  }
+  nav.links{display:flex;gap:26px;font-size:14px;font-weight:500;color:var(--muted);}
+  nav.links a:hover{color:var(--primary);}
+  @media (max-width:720px){ nav.links{display:none;} }
+
+  /* Hero */
+  .hero{
+    padding:88px 0 64px;
+    background:radial-gradient(120% 100% at 50% -10%, var(--primary-soft) 0%, var(--bg) 55%);
+    text-align:center;
+  }
+  .eyebrow{
+    display:inline-flex;align-items:center;gap:8px;
+    font-size:12.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;
+    color:var(--primary);background:var(--primary-soft);
+    padding:6px 14px;border-radius:999px;margin-bottom:22px;
+  }
+  h1.display{
+    font-size:clamp(34px,5.5vw,58px);
+    font-weight:600;line-height:1.08;letter-spacing:-0.01em;
+    max-width:840px;margin:0 auto 18px;
+  }
+  h1.display em{font-style:normal;color:var(--primary);}
+  .hero p.sub{
+    max-width:560px;margin:0 auto 34px;color:var(--muted);font-size:17px;
+  }
+  .hero-ctas{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-bottom:44px;}
+  .btn{
+    display:inline-flex;align-items:center;gap:8px;
+    padding:13px 26px;border-radius:12px;font-weight:600;font-size:14.5px;
+    text-decoration:none;border:1.5px solid transparent;cursor:pointer;
+    transition:transform .15s ease;
+  }
+  .btn:active{transform:scale(.97);}
+  .btn-primary{background:var(--primary);color:#fff;}
+  .btn-ghost{background:var(--card);color:var(--text);border-color:var(--border);}
+
+  .pulse{width:200px;margin:0 auto;}
+  .pulse path{
+    stroke-dasharray:300;stroke-dashoffset:300;
+    animation:draw 1.6s ease-out forwards;
+  }
+  @keyframes draw{ to{stroke-dashoffset:0;} }
+  @media (prefers-reduced-motion:reduce){ .pulse path{animation:none;stroke-dashoffset:0;} }
+
+  /* Section shell */
+  section{padding:76px 0;}
+  .section-head{max-width:620px;margin:0 auto 46px;text-align:center;}
+  .section-head .kicker{
+    font-size:12.5px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;
+    color:var(--accent);margin-bottom:10px;
+  }
+  .section-head h2{font-size:clamp(24px,3.4vw,34px);font-weight:600;}
+  .section-head p{color:var(--muted);margin-top:10px;font-size:15.5px;}
+
+  /* Features grid */
+  .features-grid{
+    display:grid;grid-template-columns:repeat(4,1fr);gap:18px;
+  }
+  @media (max-width:900px){ .features-grid{grid-template-columns:repeat(2,1fr);} }
+  @media (max-width:520px){ .features-grid{grid-template-columns:1fr;} }
+  .feature-card{
+    background:var(--card);border:1.5px solid var(--border);border-radius:18px;
+    padding:24px 20px;
+  }
+  .feature-card .icon{
+    width:44px;height:44px;border-radius:12px;background:var(--primary-soft);
+    display:flex;align-items:center;justify-content:center;font-size:20px;margin-bottom:14px;
+  }
+  .feature-card h3{font-size:15px;font-weight:600;margin-bottom:6px;}
+  .feature-card p{font-size:13.5px;color:var(--muted);}
+  .feature-card.clickable{cursor:pointer;transition:transform .15s ease,border-color .15s ease;text-align:left;width:100%;font-family:inherit;}
+  .feature-card.clickable:hover{border-color:var(--primary);transform:translateY(-2px);}
+  .feature-card.clickable .tag{
+    display:inline-block;margin-top:10px;font-size:11.5px;font-weight:600;color:var(--primary);
+  }
+
+  /* Modal */
+  .modal-overlay{
+    position:fixed;inset:0;background:rgba(15,48,44,0.45);
+    display:none;align-items:center;justify-content:center;padding:20px;z-index:100;
+  }
+  .modal-overlay.open{display:flex;}
+  .modal-card{
+    width:100%;max-width:440px;max-height:90vh;overflow-y:auto;
+    background:var(--card);border-radius:22px;box-shadow:0 30px 70px -20px rgba(15,92,87,0.4);
+  }
+  .modal-head{
+    background:var(--primary);color:#fff;padding:20px 24px;
+    display:flex;align-items:center;justify-content:space-between;
+  }
+  .modal-head h3{font-size:16px;font-weight:600;}
+  .modal-close{
+    background:rgba(255,255,255,0.14);border:none;color:#fff;
+    width:28px;height:28px;border-radius:9px;cursor:pointer;font-size:16px;line-height:1;
+  }
+  .modal-body{padding:22px 24px;}
+  .field{margin-bottom:16px;}
+  .field label{display:block;font-size:13px;font-weight:600;margin-bottom:6px;color:var(--text);}
+  .field input,.field textarea{
+    width:100%;border:1.5px solid var(--border);border-radius:11px;padding:11px 13px;
+    font-family:inherit;font-size:14px;background:var(--bg);outline:none;resize:vertical;
+  }
+  .field input:focus,.field textarea:focus{border-color:var(--primary);}
+  .modal-actions{display:flex;gap:10px;margin-top:6px;}
+  .modal-actions .btn{flex:1;justify-content:center;}
+  .saved-banner{
+    display:none;background:var(--primary-soft);border:1.5px solid var(--primary);
+    border-radius:12px;padding:12px 14px;font-size:13px;color:var(--primary-dark);margin-bottom:16px;
+  }
+  .saved-banner.show{display:block;}
+
+  /* Process */
+  .process-strip{background:var(--primary-dark);}
+  .process-strip .section-head h2, .process-strip .section-head p{color:#fff;}
+  .process-strip .section-head p{color:rgba(255,255,255,0.65);}
+  .process-strip .kicker{color:var(--accent);}
+  .process-row{
+    display:grid;grid-template-columns:repeat(5,1fr);gap:0;position:relative;
+  }
+  @media (max-width:900px){ .process-row{grid-template-columns:repeat(2,1fr);gap:24px;} }
+  .process-step{text-align:center;padding:0 12px;position:relative;}
+  .process-step .num{
+    width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,0.1);
+    color:var(--accent);font-weight:700;font-size:14px;
+    display:flex;align-items:center;justify-content:center;margin:0 auto 14px;
+    border:1.5px solid rgba(255,255,255,0.18);
+  }
+  .process-step h4{color:#fff;font-size:14px;font-weight:600;margin-bottom:6px;}
+  .process-step p{color:rgba(255,255,255,0.6);font-size:12.5px;}
+  .process-row .process-step:not(:last-child)::after{
+    content:'';position:absolute;top:19px;left:calc(50% + 30px);width:calc(100% - 60px);
+    height:1px;background:rgba(255,255,255,0.18);
+  }
+  @media (max-width:900px){ .process-row .process-step::after{display:none;} }
+
+  /* Audience + security */
+  .two-col{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+  @media (max-width:800px){ .two-col{grid-template-columns:1fr;} }
+  .panel{
+    background:var(--card);border:1.5px solid var(--border);border-radius:20px;padding:30px;
+  }
+  .panel h3{font-size:16px;font-weight:600;margin-bottom:18px;}
+  .pill-row{display:flex;flex-wrap:wrap;gap:10px;}
+  .pill{
+    background:var(--bg);border:1.5px solid var(--border);border-radius:999px;
+    padding:8px 15px;font-size:13px;font-weight:500;color:var(--text);
+  }
+  .check-list{list-style:none;display:flex;flex-direction:column;gap:12px;}
+  .check-list li{display:flex;gap:10px;font-size:13.5px;color:var(--text);align-items:flex-start;}
+  .check-list li::before{
+    content:'✓';color:var(--primary);font-weight:700;flex-shrink:0;
+  }
+
+  /* Chatbot demo */
+  .demo{background:var(--primary-soft);}
+  .demo-card{
+    max-width:560px;margin:0 auto;background:var(--card);border-radius:22px;
+    border:1.5px solid var(--border);overflow:hidden;box-shadow:0 24px 60px -30px rgba(15,92,87,0.35);
+  }
+  .demo-head{background:var(--primary);color:#fff;padding:18px 22px;font-weight:600;font-size:14.5px;
+    display:flex;align-items:center;gap:10px;}
+  .demo-body{padding:22px;min-height:110px;font-size:14px;color:var(--text);}
+  .demo-body .placeholder{color:var(--muted);}
+  .demo-body .answer{white-space:pre-wrap;}
+  .demo-body .error{color:#C4432B;}
+  .demo-form{display:flex;gap:10px;padding:0 22px 22px;}
+  .demo-form input{
+    flex:1;height:46px;border-radius:12px;border:1.5px solid var(--border);
+    padding:0 14px;font-size:14px;font-family:inherit;outline:none;background:var(--bg);
+  }
+  .demo-form input:focus{border-color:var(--primary);}
+  .demo-form button{
+    height:46px;padding:0 20px;border-radius:12px;border:none;background:var(--primary);
+    color:#fff;font-weight:600;font-size:14px;cursor:pointer;
+  }
+  .demo-note{text-align:center;font-size:12.5px;color:var(--muted);margin-top:14px;}
+
+  footer{
+    background:var(--primary-dark);color:rgba(255,255,255,0.6);
+    padding:32px 0;text-align:center;font-size:13px;
+  }
+  footer strong{color:#fff;}
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="nav-inner">
+    <div class="brand">
+      <span class="mark">✚</span>
+      <span>MediCare <span style="color:var(--primary)">AI</span></span>
+    </div>
+    <nav class="links">
+      <a href="#tinh-nang">Tính năng</a>
+      <a href="#quy-trinh">Quy trình</a>
+      <a href="#bao-mat">Bảo mật</a>
+      <a href="#tu-van">Tư vấn AI</a>
+    </nav>
+    <a href="#tu-van" class="btn btn-primary" style="padding:9px 18px;font-size:13.5px;">Dùng thử</a>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="wrap">
+    <span class="eyebrow">Chăm sóc chủ động · Phát hiện sớm · Bảo vệ cả gia đình</span>
+    <h1 class="display">Sức khỏe gia đình bạn, <em>trong một nơi</em></h1>
+    <p class="sub">MediCare AI lưu trữ hồ sơ, nhắc lịch uống thuốc và dùng AI phát hiện rủi ro sức khỏe sớm — cho từng thành viên trong nhà bạn.</p>
+    <div class="hero-ctas">
+      <a href="#tu-van" class="btn btn-primary">Thử tư vấn AI</a>
+      <a href="#tinh-nang" class="btn btn-ghost">Xem tính năng</a>
+    </div>
+    <svg class="pulse" viewBox="0 0 240 32" fill="none" aria-hidden="true">
+      <path d="M0 16 H70 L82 4 L96 28 L108 10 L118 16 H240" stroke="#D9A441" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </div>
+</section>
+
+<section id="tinh-nang">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="kicker">Tính năng chính</div>
+      <h2>8 việc MediCare AI làm cho gia đình bạn</h2>
+      <p>Từ lưu hồ sơ đến cảnh báo sớm — mỗi tính năng giải quyết một nỗi lo cụ thể.</p>
+    </div>
+    <div class="features-grid">
+      <button type="button" class="feature-card clickable" onclick="openProfileModal()">
+        <div class="icon">📋</div>
+        <h3>Quản lý hồ sơ sức khỏe</h3>
+        <p>Lưu bệnh án, tiền sử bệnh, dị ứng, kết quả điều trị của từng thành viên.</p>
+        <span class="tag">Bấm để nhập hồ sơ →</span>
+      </button>
+      <div class="feature-card">
+        <div class="icon">💊</div>
+        <h3>Lịch sử dùng thuốc</h3>
+        <p>Ghi log liều lượng, thời gian uống và hướng dẫn sử dụng.</p>
+      </div>
+      <div class="feature-card">
+        <div class="icon">⏰</div>
+        <h3>Nhắc lịch thông minh</h3>
+        <p>Nhắc uống thuốc, tái khám theo giờ qua app và ứng dụng.</p>
+      </div>
+      <div class="feature-card">
+        <div class="icon">📈</div>
+        <h3>Cập nhật sức khỏe</h3>
+        <p>Người bệnh hoặc người thân cập nhật tình trạng theo thời gian.</p>
+      </div>
+      <div class="feature-card">
+        <div class="icon">🧠</div>
+        <h3>AI phân tích & cảnh báo</h3>
+        <p>AI đánh giá mức độ rủi ro và đưa ra cảnh báo phù hợp.</p>
+      </div>
+      <div class="feature-card">
+        <div class="icon">⚠️</div>
+        <h3>Cảnh báo bất thường</h3>
+        <p>Phát hiện dấu hiệu bất thường, nhắc cả gia đình khi cần đi khám lại.</p>
+      </div>
+      <div class="feature-card">
+        <div class="icon">🆘</div>
+        <h3>Tra cứu cấp cứu</h3>
+        <p>Hỗ trợ tra cứu nhanh thông tin bệnh trong tình huống cấp cứu qua mã QR.</p>
+      </div>
+      <div class="feature-card">
+        <div class="icon">👨‍👩‍👧</div>
+        <h3>Kết nối bác sĩ & gia đình</h3>
+        <p>Người thân, bác sĩ cùng theo dõi quá trình chăm sóc theo thời gian thực.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="process-strip" id="quy-trinh">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="kicker">Quy trình hoạt động</div>
+      <h2>5 bước từ cập nhật đến chăm sóc</h2>
+      <p>Mỗi lần có dữ liệu mới, hệ thống tự động xử lý qua các bước sau.</p>
+    </div>
+    <div class="process-row">
+      <div class="process-step">
+        <div class="num">1</div>
+        <h4>Cập nhật hồ sơ</h4>
+        <p>Nhập thông tin sức khỏe</p>
+      </div>
+      <div class="process-step">
+        <div class="num">2</div>
+        <h4>Lưu trữ & đồng bộ</h4>
+        <p>Dữ liệu an toàn trên hệ thống</p>
+      </div>
+      <div class="process-step">
+        <div class="num">3</div>
+        <h4>AI phân tích</h4>
+        <p>Đánh giá mức rủi ro</p>
+      </div>
+      <div class="process-step">
+        <div class="num">4</div>
+        <h4>Cảnh báo & nhắc nhở</h4>
+        <p>Qua app, SMS, Email</p>
+      </div>
+      <div class="process-step">
+        <div class="num">5</div>
+        <h4>Kết nối bác sĩ</h4>
+        <p>Gia đình chăm sóc tốt hơn</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="two-col">
+      <div class="panel">
+        <h3>Dành cho ai</h3>
+        <div class="pill-row">
+          <span class="pill">Cá nhân</span>
+          <span class="pill">Gia đình</span>
+          <span class="pill">Người cao tuổi</span>
+          <span class="pill">Bác sĩ</span>
+          <span class="pill">Phòng khám</span>
+        </div>
+      </div>
+      <div class="panel" id="bao-mat">
+        <h3>Bảo mật & quyền riêng tư</h3>
+        <ul class="check-list">
+          <li>Mã hóa dữ liệu đầu cuối</li>
+          <li>Xác thực 2 lớp (2FA)</li>
+          <li>Phân quyền chi tiết theo người dùng</li>
+          <li>Tuân thủ tiêu chuẩn bảo mật y tế</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="demo" id="tu-van">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="kicker">Dùng thử</div>
+      <h2>Hỏi thử trợ lý tư vấn sức khỏe</h2>
+      <p>Demo gọi trực tiếp đến backend AI đang chạy trên Render.</p>
+    </div>
+    <div class="demo-card">
+      <div class="demo-head">🩺 Trợ lý tư vấn sức khỏe sơ bộ</div>
+      <div class="demo-body" id="demoBody">
+        <span class="placeholder">Nhập câu hỏi bên dưới, ví dụ: "Uống paracetamol chung với vitamin D được không?"</span>
+      </div>
+      <form class="demo-form" id="demoForm">
+        <input id="demoInput" type="text" placeholder="Nhập câu hỏi sức khỏe..." autocomplete="off" required>
+        <button type="submit" id="demoBtn">Hỏi</button>
+      </form>
+    </div>
+    <p class="demo-note">Đây là tư vấn sơ bộ bằng AI, không thay thế chẩn đoán của bác sĩ.</p>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <strong>MediCare AI</strong> — Đồng hành cùng sức khỏe gia đình bạn mỗi ngày
+  </div>
+</footer>
+
+<div class="modal-overlay" id="profileOverlay">
+  <div class="modal-card">
+    <div class="modal-head">
+      <h3>📋 Hồ sơ sức khỏe</h3>
+      <button type="button" class="modal-close" onclick="closeProfileModal()" aria-label="Đóng">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="saved-banner" id="savedBanner">✓ Hồ sơ đã được lưu trên trình duyệt này.</div>
+      <form id="profileForm">
+        <div class="field">
+          <label for="pHoTen">Họ và tên</label>
+          <input id="pHoTen" type="text" placeholder="Nguyễn Văn A" required>
+        </div>
+        <div class="field">
+          <label for="pNgaySinh">Ngày tháng năm sinh</label>
+          <input id="pNgaySinh" type="date" required>
+        </div>
+        <div class="field">
+          <label for="pCccd">Số CCCD</label>
+          <input id="pCccd" type="text" inputmode="numeric" placeholder="12 chữ số" pattern="\d{12}" title="CCCD gồm đúng 12 số" required>
+        </div>
+        <div class="field">
+          <label for="pSdt">Số điện thoại</label>
+          <input id="pSdt" type="tel" placeholder="09xxxxxxxx" pattern="0\d{9}" title="Số điện thoại gồm 10 số, bắt đầu bằng 0" required>
+        </div>
+        <div class="field">
+          <label for="pBenhAn">Lịch sử bệnh án</label>
+          <textarea id="pBenhAn" rows="3" placeholder="Bệnh nền, dị ứng, lần điều trị gần nhất..."></textarea>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-ghost" onclick="closeProfileModal()">Hủy</button>
+          <button type="submit" class="btn btn-primary">Lưu hồ sơ</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ⚠ THAY DÒNG DƯỚI BẰNG LINK BACKEND RENDER THẬT CỦA BẠN (theo đúng Phần 3-4 đã làm)
+  const CHAT_API_URL = 'https://TEN-PROXY-CUA-BAN.onrender.com/api/chat';
+
+  const form = document.getElementById('demoForm');
+  const input = document.getElementById('demoInput');
+  const body = document.getElementById('demoBody');
+  const btn = document.getElementById('demoBtn');
+
+  // ---- Hồ sơ sức khỏe: modal + lưu tạm trên trình duyệt (localStorage) ----
+  const profileOverlay = document.getElementById('profileOverlay');
+  const profileForm = document.getElementById('profileForm');
+  const savedBanner = document.getElementById('savedBanner');
+  const PROFILE_KEY = 'medicare_ai_ho_so';
+
+  function fillFormFromStorage() {
+    const saved = localStorage.getItem(PROFILE_KEY);
+    savedBanner.classList.remove('show');
+    if (!saved) return;
+    try {
+      const p = JSON.parse(saved);
+      document.getElementById('pHoTen').value = p.hoTen || '';
+      document.getElementById('pNgaySinh').value = p.ngaySinh || '';
+      document.getElementById('pCccd').value = p.cccd || '';
+      document.getElementById('pSdt').value = p.sdt || '';
+      document.getElementById('pBenhAn').value = p.benhAn || '';
+      savedBanner.classList.add('show');
+    } catch (err) { /* dữ liệu cũ lỗi, bỏ qua */ }
+  }
+
+  window.openProfileModal = function () {
+    fillFormFromStorage();
+    profileOverlay.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  };
+
+  window.closeProfileModal = function () {
+    profileOverlay.classList.remove('open');
+    document.body.style.overflow = '';
+  };
+
+  profileOverlay.addEventListener('click', (e) => {
+    if (e.target === profileOverlay) closeProfileModal();
+  });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeProfileModal();
+  });
+
+  profileForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const profile = {
+      hoTen: document.getElementById('pHoTen').value.trim(),
+      ngaySinh: document.getElementById('pNgaySinh').value,
+      cccd: document.getElementById('pCccd').value.trim(),
+      sdt: document.getElementById('pSdt').value.trim(),
+      benhAn: document.getElementById('pBenhAn').value.trim(),
+    };
+    localStorage.setItem(PROFILE_KEY, JSON.stringify(profile));
+    savedBanner.classList.add('show');
+  });
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const question = input.value.trim();
+    if (!question) return;
+
+    btn.disabled = true;
+    btn.textContent = 'Đang hỏi...';
+    body.innerHTML = '<span class="placeholder">Đang chờ trợ lý trả lời...</span>';
+
+    try {
+      const res = await fetch(CHAT_API_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: question })
+      });
+
+      if (!res.ok) throw new Error('Server trả lỗi ' + res.status);
+
+      const data = await res.json();
+      const answer = data.reply || data.answer || data.message || JSON.stringify(data);
+      body.innerHTML = '<div class="answer"></div>';
+      body.querySelector('.answer').textContent = answer;
+    } catch (err) {
+      body.innerHTML = '<span class="error">Không kết nối được backend. Kiểm tra lại CHAT_API_URL hoặc xem backend đã "Live" trên Render chưa.</span>';
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'Hỏi';
+    }
+  });
+</script>
+
+</body>
+</html>
